@@ -1,6 +1,8 @@
 mod operation;
+mod errors;
 
-use crate::operation::{index::*, post::*, clear::*, errors::post_error};
+use crate::operation::{index::*, post::*, clear::*, lookup::*};
+use crate::errors::post_error;
 
 use actix_web::{middleware, App, HttpServer, web};
 use std::sync::{Arc, Mutex, atomic::{AtomicUsize, Ordering}};
@@ -46,6 +48,7 @@ impl MessageApp {  // стр. 53
                         .route(web::post().to(post))
                 )
                 .service(clear)
+                .service(lookup)
         })
         .bind(("127.0.0.1", self.port))?
         .run()
